@@ -1,8 +1,8 @@
-<div *ngIf="cart && cart.length > 0; else emptyCart">
+<div *ngIf="cart && cart.length > 0; else emptyCart" ngStyle.lt-md="width:100%">
     <div *ngFor="let cartEventInfo of cart">
-        
+
         <h3>{{ cartEventInfo.event.title }}</h3>
-        
+
         <div *ngFor="let session of cartEventInfo.sessions">
             <div class="cart-item" fxLayout="row wrap" fxFlex="0 0 98%" style="margin: 5px;">
                 <span fxFlex="0 0 70%" fxLayoutAlign="start start">{{ session.date | date:'dd/MM/yyyy' }}</span>

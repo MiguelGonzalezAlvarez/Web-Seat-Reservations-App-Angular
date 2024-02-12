@@ -2,7 +2,7 @@
     <!-- Back to Catalog Button -->
     <button class="back-button" (click)="navigateToCatalog()">Volver</button>
 
-    <div fxLayout="row" fxLayoutAlign="center start" fxFlex="1 1 auto" fxLayout.lt-md="column" fxFlex.lt-md="0 0 100%">
+    <div style="width: 100%" fxLayout="row" fxLayoutAlign="center start" fxLayoutAlign.lt-md="center center" fxFlex="0 0 100%" fxLayout.lt-md="column" fxFlex.lt-md="0 0 100%">
 
         <!-- Sessions Info List -->
         <div class="card" fxFlex="0 0 35%" fxFlex.lt-md="0 0 45%">
@@ -13,7 +13,7 @@
         </div>
 
         <!-- Shopping Cart -->
-        <app-shopping-cart fxFlex="0 0 40%" fxFlex.lt-md="0 0 45%" ngClass.lt-md="shopping-cart-alignment" [cart]="cart"
+        <app-shopping-cart fxFlex="0 0 40%" fxFlex.lt-md="0 0 45%" fxLayoutAlign.lt-md="center center" ngClass.lt-md="shopping-cart-alignment" [cart]="cart"
             (removeFromCart)="removeFromCart($event.session, $event.eventInfo)">
         </app-shopping-cart>
     </div>
