@@ -1,0 +1,21 @@
+// .container {
+//     display: flex;
+//     flex-wrap: wrap;
+//     /* Allows elements to wrap onto multiple lines */
+//     justify-content: flex-start;
+//     /* Aligns elements to the start of the container */
+// }
+
+/* Row Gap */
+.container>*:not(:last-child) {
+    margin-bottom: 30px;
+    /* Reduces space between elements */
+}
+
+/* Adjustments for medium and large screens */
+@media only screen and (min-width: 600px) {
+    .container>* {
+        flex: 0 0 calc(50% - 16px);
+        /* Calculates 50% width with margin between elements */
+    }
+}
