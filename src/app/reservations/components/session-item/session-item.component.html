@@ -1,0 +1,19 @@
+<div fxLayout="row wrap" *ngIf="session" class="session-item">
+    <div class="session-info" fxFlex="0 0 58%">
+        Fecha: {{ session.date | date:'dd/MM/yyyy' }}, Disponibilidad: {{ session.availability }}
+    </div>
+    <div fxLayout="row wrap" class="controls" fxFlex="0 0 38%" fxLayoutAlign="end end">
+        <button class="minus-button" style="margin-right: 10px;" (click)="removeFromCart(session)">-</button>
+        {{ session.quantity || '0' }}
+        <button class="plus-button" style="margin-left: 10px;" (click)="addToCart(session)">+</button>
+    </div>
+    <!-- <div fxLayout="row wrap" class="controls" fxFlex="0 0 38%" fxLayoutAlign="end end">
+        <button class="minus-button" style="margin-right: 10px;" (click)="removeFromCart(session)">
+            <img [src]="minusIconUrl" alt="-" class="minus-icon">
+        </button>
+        {{ session.quantity || '0' }}
+        <button class="plus-button" style="margin-left: 10px;" (click)="addToCart(session)">
+            <img [src]="plusIconUrl" alt="+" class="plus-icon">
+        </button>
+    </div> -->
+</div>
