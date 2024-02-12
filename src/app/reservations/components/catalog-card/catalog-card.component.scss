@@ -1,0 +1,73 @@
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-content {
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column; // Always display elements in a column 
+    align-items: flex-start; // Align to the left 
+    text-align: left; // Align text to the left 
+}
+
+.title,
+.subtitle,
+.image {
+    cursor: pointer; // Add cursor pointer to the title, subtitle and image
+}
+
+.title,
+.subtitle {
+    color: #3498db;
+    margin-left: 10px; // Add left margin to the title and subtitle
+}
+
+.subtitle {
+    margin-bottom: 8px;
+}
+
+.image {
+    margin-top: 10px;
+    width: 100%;
+    height: auto;
+    margin: 0; // Remove all margins from the image 
+}
+
+h2 {
+    margin: 0 0 8px;
+}
+
+
+h3 {
+    margin: 0;
+    color: #666;
+}
+
+.date-range {
+    margin-bottom: 8px;
+    margin-left: 10px; // Add left margin to the title and subtitle
+}
+
+.description {
+    color: #333;
+    margin-bottom: 12px;
+    margin-left: 10px; // Add left margin to the title and subtitle
+    min-height: 90px; // Add a minimum height to the description
+}
+
+
+button.buy-button {
+    background-color: #207dc9;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 0; // Remove rounded borders from the button 
+    cursor: pointer;
+    width: 100%; // Occupy the entire width of the container 
+    box-sizing: border-box; // Include padding in the total width 
+    margin-top: auto; // Add top margin to the button 
+}

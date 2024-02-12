@@ -1,0 +1,17 @@
+<div class="card">
+    <div class="card-content">
+        <h2 class="title" (click)="navigateToDetail()">{{ title | titlecase }}</h2>
+
+        <h3 class="subtitle" (click)="navigateToDetail()">{{ subtitle }}</h3>
+
+        <img class="image" [src]="image" alt="IMAGE NOT FOUND" (click)="navigateToDetail()">
+
+        <div class="date-range">
+            <p>{{ startDate | date:'dd/MM/yyyy' }} - {{ endDate | date:'dd/MM/yyyy' }}</p>
+        </div>
+
+        <div fxHide.xs fxHide.sm class="description" [innerHTML]="description"></div>
+
+        <button class="buy-button" (click)="navigateToDetail()">Comprar</button>
+    </div>
+</div>
