@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -8,26 +8,25 @@ import { ReservationsService } from '../../services/reservations.service';
 import { EventInfo } from '../../interfaces/event-info';
 import { Session } from '../../interfaces/session';
 
-// import { IMAGES_PATH, TRASH_ICON } from '../../constants/constants';
-
 @Component({
   selector: 'app-session-screen',
   templateUrl: './session-screen.component.html',
-  styleUrls: ['./session-screen.component.scss']
+  styleUrls: ['./session-screen.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionScreenComponent {
+export class SessionScreenComponent implements OnInit {
   private eventInfoSubscription?: Subscription;
 
-  eventInfo?: EventInfo; // Event info object to store event details
-
+  @Input() eventInfo?: EventInfo; // Event info object to store event details
   cart: EventInfo[] = []; // Array to store selected sessions in the cart
 
   constructor(
-    private route: ActivatedRoute, 
-    private router: Router, 
+    private route: ActivatedRoute,
+    private router: Router,
     private reservationsService: ReservationsService,
-    private shoppingCartService: ShoppingCartService
-    ) { }
+    private shoppingCartService: ShoppingCartService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     // Fetch event details based on route parameter event id
@@ -38,12 +37,6 @@ export class SessionScreenComponent {
 
     // Obtain updated cart from the service
     this.cart = this.shoppingCartService.getCart();
-  }
-
-  ngOnDestroy(): void {
-    if (this.eventInfoSubscription) {
-      this.eventInfoSubscription.unsubscribe();
-    }
   }
 
   addToCart(session: Session, eventInfo: EventInfo): void {
@@ -58,6 +51,9 @@ export class SessionScreenComponent {
 
     // Obtain updated cart from the service
     this.cart = this.shoppingCartService.getCart();
+
+    // Marcar para la detección de cambios
+    this.cdr.markForCheck();
   }
 
   removeFromCart(session: Session, eventInfo: EventInfo): void {
@@ -77,6 +73,9 @@ export class SessionScreenComponent {
 
     // Obtain updated cart from the service
     this.cart = this.shoppingCartService.getCart();
+
+    // Marcar para la detección de cambios
+    this.cdr.markForCheck();
   }
 
   navigateToCatalog(): void {
@@ -87,34 +86,32 @@ export class SessionScreenComponent {
     this.eventInfoSubscription = this.reservationsService.getEventInfo(eventId).subscribe({
       next: (eventInfo: EventInfo) => {
         this.eventInfo = eventInfo;
+        // Marcar para la detección de cambios
+        this.cdr.markForCheck();
       },
       error: (error) => console.error('Error fetching event data', error),
       complete: () => console.log('Event info fetched successfully')
     });
-
   }
 
   private updateEventDetails(session: Session): void {
     // Function to update the event details with the selected session so the quantity is updated
     // avoiding discrepancies between the session quantity and the cart quantity
-    if(!this.eventInfo) {
+    if (!this.eventInfo) {
       console.error('Event details not found');
       return;
     }
 
-    // const existingSessionIndex = this.eventInfo.sessions.findIndex(
-    //   (existingSession: Session) => existingSession.id === session.id
-    // );
     const existingSessionIndex = this.eventInfo.sessions.findIndex(
       (existingSession: Session) => existingSession.date === session.date
     );
 
-    if(existingSessionIndex === -1) {
+    if (existingSessionIndex === -1) {
       console.log('The session deleted was from a different event. No need to update the event details');
       return;
     }
 
-    this.eventInfo!.sessions[existingSessionIndex] = session;
+    this.eventInfo.sessions = [...this.eventInfo.sessions];
+    this.eventInfo.sessions[existingSessionIndex] = session;
   }
-
 }

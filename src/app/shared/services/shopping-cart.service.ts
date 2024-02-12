@@ -80,7 +80,8 @@ export class ShoppingCartService {
       sessions: [session]
     };
 
-    this.cart.push(cartEvent);
+    // this.cart.push(cartEvent);
+    this.cart = [...this.cart, cartEvent];
   }
 
   private updateEventInCart(selectedEventInfo: EventInfo, session: Session): void {
