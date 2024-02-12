@@ -1,0 +1,22 @@
+<div *ngIf="cart && cart.length > 0; else emptyCart">
+    <div *ngFor="let cartEventInfo of cart">
+        
+        <h3>{{ cartEventInfo.event.title }}</h3>
+        
+        <div *ngFor="let session of cartEventInfo.sessions">
+            <div class="cart-item" fxLayout="row wrap" fxFlex="0 0 98%" style="margin: 5px;">
+                <span fxFlex="0 0 70%" fxLayoutAlign="start start">{{ session.date | date:'dd/MM/yyyy' }}</span>
+                <span fxFlex="0 0 10%" fxLayoutAlign="end end">x{{ session.quantity }}</span>
+                <button class="delete-button" fxFlex="0 0 10%" fxLayoutAlign="end end"
+                    (click)="removeSessionFromCart(session, cartEventInfo)">
+                    <img [src]="deleteIconUrl" alt="Borrar" class="trash-icon">
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<ng-template #emptyCart>
+    <p>EMPTY CART</p>
+</ng-template>
