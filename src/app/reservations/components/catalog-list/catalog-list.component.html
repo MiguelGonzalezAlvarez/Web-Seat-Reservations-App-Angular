@@ -1,7 +1,0 @@
-<div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign.gt-sm="center start">
-    <div *ngFor="let event of eventList | orderByDate" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.gt-sm="35%" fxLayoutAlign.gt-sm="center start">
-        <app-catalog-card [cardId]="event.id" [title]="event.title" [subtitle]="event.subtitle" [image]="event.image"
-            [startDate]="event.startDate ?? ''" [endDate]="event.endDate ?? ''" [description]="event.description ?? ''">
-        </app-catalog-card>
-    </div>
-</div>
