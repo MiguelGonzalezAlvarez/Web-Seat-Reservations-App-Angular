@@ -1,0 +1,11 @@
+<div fxLayout="row wrap" *ngIf="reservationDetail && reservationDetail.sessions && reservationDetail.sessions.length > 0; else notFoundBlock">
+    <div *ngFor="let session of reservationDetail.sessions | orderByDate" fxFlex="0 0 100%" style="margin:10px;">
+        <session-item [session]="session" (addToCartEvent)="addToCart($event)"
+            (removeFromCartEvent)="removeFromCart($event)">
+        </session-item>
+    </div>
+</div>
+
+<ng-template #notFoundBlock>
+    <p>EVENT INFO NOT FOUND</p>
+</ng-template>

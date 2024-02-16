@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Session } from '../../interfaces/session';
-import { IMAGES_PATH, MINUS_ICON, PLUS_ICON } from '../../constants/constants';
+import { IMAGES_PATH, PLUS_ICON, MINUS_ICON } from '../../constants/reservation-urls';
 
 @Component({
-  selector: 'app-session-item',
+  selector: 'session-item',
   templateUrl: './session-item.component.html',
-  styleUrls: ['./session-item.component.scss']
+  styleUrls: ['./session-item.component.css']
 })
 export class SessionItemComponent {
   @Input() session?: Session;
@@ -21,7 +21,7 @@ export class SessionItemComponent {
       return;
     }
 
-    this.addToCartEvent.emit(session as Session);
+    this.addToCartEvent.emit(session);
   }
 
   removeFromCart(session: Session): void {
@@ -30,7 +30,7 @@ export class SessionItemComponent {
       return;
     }
 
-    this.removeFromCartEvent.emit(session as Session);
+    this.removeFromCartEvent.emit(session);
   }
 
 }

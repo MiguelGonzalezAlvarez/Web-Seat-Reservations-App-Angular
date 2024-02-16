@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 
-import { Event } from '../interfaces/event';
-import { EventInfo } from '../interfaces/event-info';
-import { DATA_PATH, EVENTS_URL, EVENT_INFO_URL } from '../constants/constants';
+import { Reservation } from '../interfaces/reservation';
+import { ReservationDetail } from '../interfaces/reservation-detail';
+import { DATA_PATH, EVENTS_URL, EVENT_INFO_URL } from '../constants/reservation-urls';
 
 @Injectable({
   providedIn: 'root'
@@ -13,26 +13,26 @@ export class ReservationsService {
 
   constructor(private http: HttpClient) { }
 
-  getEvents(): Observable<Event[]> {
-    return this.http.get<Event[]>(`${DATA_PATH}${EVENTS_URL}`).pipe(catchError(this.handleError));
+  getReservations(): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(`${DATA_PATH}${EVENTS_URL}`).pipe(catchError(this.handleError));
   }
 
-  getEventInfo(id: number): Observable<EventInfo> {
-    return this.http.get<EventInfo>(`${DATA_PATH}${EVENT_INFO_URL.replace(':id', id.toString()) }`).pipe(
-      map(this.handleEventInfo),
+  getReservationDetails(id: number): Observable<ReservationDetail> {
+    return this.http.get<ReservationDetail>(`${DATA_PATH}${EVENT_INFO_URL.replace(':id', id.toString())}`).pipe(
+      map(this.handleReservationDetail),
       catchError(this.handleError));
   }
 
-  private handleEventInfo(eventInfo: EventInfo): EventInfo {
-    eventInfo.sessions = eventInfo.sessions.map((session, index) => ({
+  private handleReservationDetail(reservationDetail: ReservationDetail): ReservationDetail {
+    // Add a quantity property to each session so we can bind it to the input field
+    reservationDetail.sessions = reservationDetail.sessions.map(session => ({
       ...session,
-      // id: index + 1, // Adding 1 to make it 1-based index
       quantity: '0'
     }));
-    return eventInfo;
+    return reservationDetail;
   }
 
-  private handleError(error: any) {
+  private handleError(error: HttpErrorResponse) {
     console.error('An error occurred:', error);
     return throwError(() => new Error('Something went wrong, please try again later.'));
   }

@@ -4,21 +4,21 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'reservations',
+    path: 'seat-reservation-app',
     loadChildren: () => import('./reservations/reservations.module').then(module => module.ReservationsModule)
   },
   {
     path: '**',
-    redirectTo: 'reservations'
+    redirectTo: 'seat-reservation-app/reservations'
   }
 ];
 
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes)
   ],
   exports: [
-    RouterModule,
+    RouterModule
   ]
 })
 export class AppRoutingModule { }

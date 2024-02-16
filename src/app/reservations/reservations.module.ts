@@ -1,27 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CatalogScreenComponent } from './pages/catalog-screen/catalog-screen.component';
-import { SessionScreenComponent } from './pages/session-screen/session-screen.component';
-import { CatalogCardComponent } from './components/catalog-card/catalog-card.component';
-import { ReservationsRoutingModule } from './reservations-routing.module';
+import { ReservationsScreenComponent } from './screens/reservations-screen/reservations-screen.component';
+import { ReservationDetailScreenComponent } from './screens/reservation-detail-screen/reservation-detail-screen.component';
+import { ReservationsListComponent } from './components/reservations-list/reservations-list.component';
 import { SharedModule } from '../shared/shared.module';
+import { ReservationItemComponent } from './components/reservation-item/reservation-item.component';
 import { SessionItemComponent } from './components/session-item/session-item.component';
-import { SessionListComponent } from './components/session-list/session-list.component';
-import { CatalogListComponent } from './components/catalog-list/catalog-list.component';
-
+import { SessionsListComponent } from './components/sessions-list/sessions-list.component';
+import { ReservationsRoutingModule } from './reservations-routing.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
-    CatalogScreenComponent,
-    SessionScreenComponent,
-    CatalogCardComponent,
-    SessionItemComponent,
-    SessionListComponent,
-    CatalogListComponent
+    ReservationsScreenComponent,
+    ReservationDetailScreenComponent,
+    ReservationsListComponent,
+    ReservationItemComponent,
+    SessionsListComponent,
+    SessionItemComponent
   ],
   imports: [
     CommonModule,
     ReservationsRoutingModule,
+    HttpClientModule,
     SharedModule
   ]
 })

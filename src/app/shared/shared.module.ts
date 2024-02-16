@@ -2,9 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ToolbarComponent } from './components/toolbar/toolbar.component';
 import { ShoppingCartComponent } from './components/shopping-cart/shopping-cart.component';
-import { RouterModule } from '@angular/router';
+import { OrderByDatePipe } from './pipes/order-by-date.pipe';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { OrderByDatePipe } from './pipes/orderByDate.pipe';
 
 
 @NgModule({
@@ -15,13 +14,12 @@ import { OrderByDatePipe } from './pipes/orderByDate.pipe';
   ],
   imports: [
     CommonModule,
-    RouterModule,
-    FlexLayoutModule
+    FlexLayoutModule,
   ],
   exports: [
+    FlexLayoutModule,
     ShoppingCartComponent,
     ToolbarComponent,
-    FlexLayoutModule,
     OrderByDatePipe
   ]
 })

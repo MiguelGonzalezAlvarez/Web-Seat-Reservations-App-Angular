@@ -1,20 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { SessionScreenComponent } from './pages/session-screen/session-screen.component';
-import { CatalogScreenComponent } from './pages/catalog-screen/catalog-screen.component';
+import { ReservationDetailScreenComponent } from './screens/reservation-detail-screen/reservation-detail-screen.component';
+import { ReservationsScreenComponent } from './screens/reservations-screen/reservations-screen.component';
 
 const routes: Routes = [
     {
-        path: 'catalog',
-        component: CatalogScreenComponent,
+        path: 'reservations',
+        component: ReservationsScreenComponent,
     },
     {
-        path: 'detail/:id',
-        component: SessionScreenComponent,
+        path: 'reservation-detail/:id',
+        component: ReservationDetailScreenComponent,
     },
     {
         path: '**',
-        redirectTo: 'catalog'
+        redirectTo: 'reservations'
     }
 ]
 
