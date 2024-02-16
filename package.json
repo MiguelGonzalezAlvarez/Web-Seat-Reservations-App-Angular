@@ -1,6 +1,6 @@
 {
-  "name": "seat-reservation-project",
-  "version": "0.0.0",
+  "name": "seat-reservation-app",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

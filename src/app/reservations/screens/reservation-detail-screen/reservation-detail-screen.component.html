@@ -1,0 +1,24 @@
+<div fxLayout="column" fxLayoutAlign="start end" fxFlex.lt-md="0 0 97%" ngStyle.lt-md="height: 100%">
+    <!-- Back to Reservations Button -->
+    <button class="back-button" (click)="navigateToReservations()">Volver</button>
+
+    <div style="width: 100%" fxLayout="row" fxLayoutAlign="center start" fxLayoutAlign.lt-md="center center"
+        fxFlex="0 0 100%" fxLayout.lt-md="column" fxFlex.lt-md="0 0 100%">
+
+        <!-- Sessions Info List -->
+        <div class="card" fxFlex="0 0 35%" fxFlex.lt-md="0 0 45%">
+            <div class="card-content">
+                <sessions-list [reservationDetail]="reservationDetail"
+                    (addToCartEvent)="addToCart($event, this.reservationDetail!)"
+                    (removeFromCartEvent)="removeFromCart($event, this.reservationDetail!)"></sessions-list>
+            </div>
+        </div>
+
+        <!-- Shopping Cart -->
+        <shopping-cart fxFlex="0 0 40%" fxFlex.lt-md="0 0 45%" fxLayoutAlign.lt-md="center center"
+            ngClass.lt-md="shopping-cart-alignment"
+            (removeFromCart)="removeFromCart($event.session, $event.reservationDetail)">
+        </shopping-cart>
+    </div>
+
+</div>

@@ -1,23 +1,49 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IMAGES_PATH, TRASH_ICON } from 'src/app/reservations/constants/constants';
-import { EventInfo } from 'src/app/reservations/interfaces/event-info';
-import { Session } from 'src/app/reservations/interfaces/session';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ReservationDetail } from '../../../reservations/interfaces/reservation-detail';
+import { Session } from '../../../reservations/interfaces/session';
+import { IMAGES_PATH, TRASH_ICON } from '../../../reservations/constants/reservation-urls';
+import { ShoppingCartService } from '../../services/shopping-cart.service';
 
 @Component({
-  selector: 'app-shopping-cart',
+  selector: 'shopping-cart',
   templateUrl: './shopping-cart.component.html',
-  styleUrls: ['./shopping-cart.component.scss']
+  styleUrls: ['./shopping-cart.component.css']
 })
 export class ShoppingCartComponent {
-  deleteIconUrl = `../../../../${IMAGES_PATH}${TRASH_ICON}`; // Path to the delete icon image
-  @Input() cart: EventInfo[] = []; // Array to store selected sessions in the cart
-  @Output() removeFromCart = new EventEmitter<{ eventInfo: EventInfo, session: Session }>(); // Event emitter to remove a session from the cart
+  private reservationDetailSubscription?: Subscription;
+  private cartSubscription?: Subscription;
 
-  constructor() { }
+  cart: ReservationDetail[] = [];
+  deleteIconUrl = `../../../../${IMAGES_PATH}${TRASH_ICON}`;
 
-  // Remove the selected session from the cart
-  removeSessionFromCart(session: Session, eventInfo: EventInfo): void {
-    this.removeFromCart.emit({ eventInfo, session });
+  @Output() removeFromCart = new EventEmitter<{ reservationDetail: ReservationDetail, session: Session }>(); // Event emitter to remove a session from the cart
+
+  constructor(private shoppingCartService: ShoppingCartService, private cdr: ChangeDetectorRef) { }
+
+  ngOnInit(): void {
+    this.cartSubscription = this.shoppingCartService.cartObservable.subscribe(cart => {
+      this.cart = cart;
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.reservationDetailSubscription) {
+      this.reservationDetailSubscription.unsubscribe();
+    }
+
+    if (this.cartSubscription) {
+      this.cartSubscription.unsubscribe();
+    }
+  }
+
+  setShoppingCartServiceForTesting(testingShoppingCartService: ShoppingCartService): void {
+    this.shoppingCartService = testingShoppingCartService;
+  }
+
+  removeSessionFromCart(session: Session, reservationDetail: ReservationDetail): void {
+    this.removeFromCart.emit({ reservationDetail, session });
   }
 
 }

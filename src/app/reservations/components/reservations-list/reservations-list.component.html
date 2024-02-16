@@ -1,0 +1,8 @@
+<div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign.gt-sm="center start">
+    <div *ngFor="let reservation of reservationsList | orderByDate" fxFlex.xs="100%" fxFlex.sm="100%" fxFlex.gt-sm="35%"
+        fxLayoutAlign.gt-sm="center start">
+        <reservation-item [cardId]="reservation.id" [title]="reservation.title" [subtitle]="reservation.subtitle" [image]="reservation.image"
+            [startDate]="reservation.startDate ?? ''" [endDate]="reservation.endDate ?? ''" [description]="reservation.description ?? ''">
+        </reservation-item>
+    </div>
+</div>

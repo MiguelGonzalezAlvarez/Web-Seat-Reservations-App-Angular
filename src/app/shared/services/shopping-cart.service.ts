@@ -1,120 +1,114 @@
 import { Injectable } from '@angular/core';
-import { EventInfo } from '../../reservations/interfaces/event-info';
-import { Session } from 'src/app/reservations/interfaces/session';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ReservationDetail } from '../../reservations/interfaces/reservation-detail';
+import { Session } from '../../reservations/interfaces/session';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShoppingCartService {
-  // TODO: Replace all this logic with redux state management
-  // For this technical test I will use a service to manage the shopping cart state
-  // This is not the best approach for a real application
-  // The best approach would be to use a state management library like NgRx or Akita
-  cart: EventInfo[] = []; // Array to store selected sessions in the cart
+  private cartSubject: BehaviorSubject<ReservationDetail[]> = new BehaviorSubject<ReservationDetail[]>([]);
+  cartObservable: Observable<ReservationDetail[]> = this.cartSubject.asObservable();
 
-  constructor() { }
-
-  getCart(): EventInfo[] {
-    return [...this.cart]; // Return a copy of the cart
+  get cart(): Observable<ReservationDetail[]> {
+    return this.cartObservable;
   }
 
-  setCart(cart: EventInfo[]): void {
-    this.cart = cart;
+  setCart(cart: ReservationDetail[]): void {
+    this.cartSubject.next(cart);
   }
 
-  addToCart(selectedEventInfo: EventInfo, session: Session): void {
-    const alreadyAddedEventInfo = this.cart.find(
-      (eventDetails: EventInfo) => this.checkEventInfoAlreadyAdded(selectedEventInfo, eventDetails)
-    );
+  addToCart(selectedReservationDetail: ReservationDetail, session: Session): void {
+    const cart = this.cartSubject.value;
+    const reservationInCart = cart.find((cartReservationDetail: ReservationDetail) => cartReservationDetail?.reservation?.id === selectedReservationDetail?.reservation?.id);
 
-    if (!alreadyAddedEventInfo) {
-      this.addEventToCart(selectedEventInfo, session);
+    session.quantity = (+session.quantity! + 1).toString();
+
+    // If the selected reservation is not added to the cart, add the selected reservation to the cart
+    if (!reservationInCart) {
+      this.addReservationDetail(selectedReservationDetail, session);
       return;
     }
 
-    // If the selected event is already added to the cart, update the selected event in the cart
-    this.updateEventInCart(alreadyAddedEventInfo, session);
+    // If the selected reservation is already added to the cart, update the session of the selected reservation
+    this.updateSessions(reservationInCart, session);
   }
 
-  
-  removeFromCart(selectedEventInfo: EventInfo, session: Session): void {
-    const eventInfoAlreadyAdded = this.cart.find(
-      (eventDetails: EventInfo) => this.checkEventInfoAlreadyAdded(selectedEventInfo, eventDetails)
+  removeFromCart(selectedReservationDetail: ReservationDetail, session: Session): void {
+    const cart = this.cartSubject.value;
+    const reservationInCart = cart.find(
+      (cartReservationDetail: ReservationDetail) => cartReservationDetail?.reservation?.id === selectedReservationDetail?.reservation?.id
     );
 
-    // If the selected event is not added to the cart exit the function
-    // Not possible to remove a session from an event that is not in the cart
-    if (!eventInfoAlreadyAdded) {
+    if (!reservationInCart) {
       console.log('Event not found in the cart');
       return;
     }
 
-    console.log(session.quantity);
+    session.quantity = (+session.quantity! - 1).toString();
 
-    // If the selected session is in the cart and the quantity is 0, remove the session from the cart
     if (session.quantity === '0') {
-      // Remove the session from the cart
-      // const remainingSessions = eventInfoAlreadyAdded.sessions.filter((eventSession: Session) => eventSession.id !== session.id);
-      const remainingSessions = eventInfoAlreadyAdded.sessions.filter((eventSession: Session) => eventSession.date !== session.date);
-
-      // If there are no remaining sessions, remove the event from the cart
-      if (remainingSessions.length === 0) {
-        this.removeEventFromCart(eventInfoAlreadyAdded);
-        return;
-      }
-
-      // If there are remaining sessions, update the sessions in the cart
-      eventInfoAlreadyAdded.sessions = remainingSessions;
+      this.cleanSessions(reservationInCart, session);
+    } else {
+      this.updateSessions(reservationInCart, session);
     }
 
   }
 
-  private checkEventInfoAlreadyAdded(selectedEventInfo: EventInfo, eventInfo: EventInfo): boolean {
-    return (eventInfo && eventInfo.event.id === selectedEventInfo.event.id);
-  }
-
-  private addEventToCart(selectedEventInfo: EventInfo, session: Session): void {
-    // If the selected event is not added to the cart, add the selected event to the cart
-    const cartEvent: EventInfo = {
-      event: selectedEventInfo.event,
+  private addReservationDetail(selectedReservationDetail: ReservationDetail, session: Session): void {
+    const cart = this.cartSubject.value;
+    const cartEvent: ReservationDetail = {
+      reservation: selectedReservationDetail.reservation,
       sessions: [session]
     };
 
-    // this.cart.push(cartEvent);
-    this.cart = [...this.cart, cartEvent];
+    this.cartSubject.next([...cart, cartEvent]);
   }
 
-  private updateEventInCart(selectedEventInfo: EventInfo, session: Session): void {
-    // const sessionIndex = selectedEventInfo.sessions.findIndex(
-    //   (eventSession: Session) => eventSession.id === session.id
-    // );
-
-    const sessionIndex = selectedEventInfo.sessions.findIndex(
-      (eventSession: Session) => eventSession.date === session.date
+  private removeReservationDetail(reservationDetail: ReservationDetail): void {
+    const cart = this.cartSubject.value;
+    const eventIndexToRemove = cart.findIndex(
+      (cartReservationDetail: ReservationDetail) => reservationDetail.reservation.id === cartReservationDetail.reservation.id
     );
 
-    // If the selected session is already added to the cart, update the session in the cart
-    if (sessionIndex !== -1) {
-      selectedEventInfo.sessions[sessionIndex] = session;
-      return;
-    }
-
-    // If the selected session is not added to the cart, add the selected session to the cart
-    selectedEventInfo.sessions.push(session);
-  }
-
-  private removeEventFromCart(alreadyAddedEventInfo: EventInfo): void {
-    const eventIndexToRemove = this.cart.findIndex(
-      (eventInfo: EventInfo) => eventInfo.event.id === alreadyAddedEventInfo.event.id
-    );
-
-    // If the event is not in the cart, exit the function
     if (eventIndexToRemove === -1) {
       console.log('Event not found in the cart');
       return;
     }
 
-    this.cart.splice(eventIndexToRemove, 1);
+    cart.splice(eventIndexToRemove, 1);
+    this.cartSubject.next([...cart]);
+  }
+
+  private updateSessions(cartReservationDetail: ReservationDetail, session: Session): void {
+    const cart = this.cartSubject.value;
+    // Find if there is a session with the same date in the cart
+    const sessionIndex = cartReservationDetail.sessions.findIndex(
+      (cartSession: Session) => cartSession.date === session.date
+    );
+
+    if (sessionIndex === -1) {
+      cartReservationDetail.sessions.push(session);
+    } else {
+      // If we find a session with the same date, update the session
+      cartReservationDetail.sessions[sessionIndex] = session;
+    }
+
+    this.cartSubject.next([...cart]);
+  }
+
+  private cleanSessions(reservationInCart: ReservationDetail, session: Session): void {
+    // Remove the selected session from the reservation
+    const remainingSessions = reservationInCart.sessions.filter((cartSelectedSession: Session) => cartSelectedSession.date !== session.date);
+
+    // When there are no sessions remaining for that reservation, remove that reservation from the cart
+    if (remainingSessions.length === 0) {
+      this.removeReservationDetail(reservationInCart);
+      return;
+    }
+
+    // When there are sessions remaining for that reservation, remove the selected session from the reservation
+    reservationInCart.sessions = remainingSessions;
   }
 
 }

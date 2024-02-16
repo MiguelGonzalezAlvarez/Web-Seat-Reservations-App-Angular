@@ -1,14 +1,14 @@
 <div *ngIf="cart && cart.length > 0; else emptyCart" ngStyle.lt-md="width:100%">
-    <div *ngFor="let cartEventInfo of cart">
+    <div *ngFor="let cartReservationDetail of cart">
 
-        <h3>{{ cartEventInfo.event.title }}</h3>
+        <h3>{{ cartReservationDetail?.reservation?.title || 'Title is not available' }}</h3>
 
-        <div *ngFor="let session of cartEventInfo.sessions">
+        <div *ngFor="let session of cartReservationDetail.sessions">
             <div class="cart-item" fxLayout="row wrap" fxFlex="0 0 98%" style="margin: 5px;">
                 <span fxFlex="0 0 70%" fxLayoutAlign="start start">{{ session.date | date:'dd/MM/yyyy' }}</span>
                 <span fxFlex="0 0 10%" fxLayoutAlign="end end">x{{ session.quantity }}</span>
                 <button class="delete-button" fxFlex="0 0 10%" fxLayoutAlign="end end"
-                    (click)="removeSessionFromCart(session, cartEventInfo)">
+                    (click)="removeSessionFromCart(session, cartReservationDetail)">
                     <img [src]="deleteIconUrl" alt="Borrar" class="trash-icon">
                 </button>
             </div>
