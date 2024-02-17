@@ -8,9 +8,9 @@
         <!-- Sessions Info List -->
         <div class="card" fxFlex="0 0 35%" fxFlex.lt-md="0 0 45%">
             <div class="card-content">
-                <sessions-list [reservationDetail]="reservationDetail"
-                    (addToCartEvent)="addToCart($event, this.reservationDetail!)"
-                    (removeFromCartEvent)="removeFromCart($event, this.reservationDetail!)"></sessions-list>
+                <sessions-list [reservationDetail]="reservationDetail()"
+                    (addToCartEvent)="addToCart($event, reservationDetail()!)"
+                    (removeFromCartEvent)="removeFromCart($event, reservationDetail()!)"></sessions-list>
             </div>
         </div>
 

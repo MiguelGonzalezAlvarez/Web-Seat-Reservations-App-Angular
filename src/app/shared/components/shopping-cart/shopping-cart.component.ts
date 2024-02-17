@@ -22,7 +22,7 @@ export class ShoppingCartComponent {
   constructor(private shoppingCartService: ShoppingCartService, private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.cartSubscription = this.shoppingCartService.cartObservable.subscribe(cart => {
+    this.cartSubscription = this.shoppingCartService.cart.subscribe(cart => {
       this.cart = cart;
       this.cdr.markForCheck();
     });

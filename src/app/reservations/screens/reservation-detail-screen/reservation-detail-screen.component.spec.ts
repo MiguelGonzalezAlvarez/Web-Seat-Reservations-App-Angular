@@ -59,7 +59,7 @@ describe('ReservationDetailScreenComponent', () => {
 
     fixture.detectChanges();
 
-    expect(component.reservationDetail).toEqual(reservationDetail);
+    expect(component.reservationDetail()).toEqual(reservationDetail);
   });
 
   it('should add session to cart', () => {
@@ -68,7 +68,7 @@ describe('ReservationDetailScreenComponent', () => {
     const reservationDetail: ReservationDetail = { reservation: mockReservation, sessions: [] };
     spyOn(shoppingCartService, 'addToCart');
 
-    component.reservationDetail = reservationDetail;
+    component.reservationDetail.set(reservationDetail);
     component.addToCart(mockSession, reservationDetail);
 
     expect(shoppingCartService.addToCart).toHaveBeenCalledWith(reservationDetail, mockSession);

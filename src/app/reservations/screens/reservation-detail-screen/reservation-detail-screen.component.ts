@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, ChangeDetectionStrategy, Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectorRef, ChangeDetectionStrategy, Component, Input, OnInit, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -15,10 +15,10 @@ import { RESERVATION_URL } from '../../constants/reservation-urls';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReservationDetailScreenComponent implements OnInit, OnDestroy {
-  private reservationDetailSubscription?: Subscription;
-  private cartSubscription?: Subscription;
+  private reservationDetailSubscription = signal<Subscription | undefined>(undefined);
+  private cartSubscription = signal<Subscription | undefined>(undefined);
 
-  @Input() reservationDetail?: ReservationDetail;
+  public reservationDetail = signal<ReservationDetail | undefined>(undefined);
 
   constructor(
     private route: ActivatedRoute,
@@ -35,12 +35,15 @@ export class ReservationDetailScreenComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.reservationDetailSubscription) {
-      this.reservationDetailSubscription.unsubscribe();
+    const reservationDetailSubscription = this.reservationDetailSubscription();
+    const cartSubscription = this.cartSubscription();
+
+    if (reservationDetailSubscription) {
+      reservationDetailSubscription.unsubscribe();
     }
 
-    if (this.cartSubscription) {
-      this.cartSubscription.unsubscribe();
+    if (cartSubscription) {
+      cartSubscription.unsubscribe();
     }
   }
 
@@ -57,14 +60,17 @@ export class ReservationDetailScreenComponent implements OnInit, OnDestroy {
   }
 
   private getReservationDetail(eventId: number): void {
-    this.reservationDetailSubscription = this.reservationsService.getReservationDetails(eventId).subscribe({
-      next: (reservationDetail: ReservationDetail) => {
-        this.reservationDetail = reservationDetail;
-        this.cdr.markForCheck();
-      },
-      error: (error) => console.error('Error fetching event data', error),
-      complete: () => console.log('Event info fetched successfully')
-    });
+    this.reservationDetailSubscription.set(
+      this.reservationsService.getReservationDetails(eventId).subscribe(
+        {
+          next: (reservationDetail: ReservationDetail) => {
+            this.reservationDetail.set(reservationDetail);
+            this.cdr.markForCheck();
+          },
+          error: (error) => console.error('Error fetching event data', error),
+          complete: () => console.log('Event info fetched successfully')
+        }
+      ));
   }
 
 }

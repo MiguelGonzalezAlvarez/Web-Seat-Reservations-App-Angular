@@ -8,7 +8,7 @@ import { Session } from '../../reservations/interfaces/session';
 })
 export class ShoppingCartService {
   private cartSubject: BehaviorSubject<ReservationDetail[]> = new BehaviorSubject<ReservationDetail[]>([]);
-  cartObservable: Observable<ReservationDetail[]> = this.cartSubject.asObservable();
+  private cartObservable: Observable<ReservationDetail[]> = this.cartSubject.asObservable();
 
   get cart(): Observable<ReservationDetail[]> {
     return this.cartObservable;
